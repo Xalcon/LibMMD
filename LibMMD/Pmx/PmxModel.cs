@@ -21,6 +21,7 @@ namespace LibMMD.Pmx
         public List<PmxDisplayData> DisplayData { get; internal set; }
         public List<PmxRigidBody> RigidBodies { get; internal set; }
         public List<PmxJoint> Joints { get; internal set; }
+        public List<PmxSoftBody> SoftBodies { get; internal set; }
 
         internal PmxModel() { }
     }

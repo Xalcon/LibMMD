@@ -33,6 +33,10 @@ namespace LibMMD.Pmx
             ParseDisplayData(reader, pmx);
             ParseRigidBodies(reader, pmx);
             ParseJoints(reader, pmx);
+            if (pmx.Version > 2.0)
+            {
+                ParseSoftBodies(reader, pmx);
+            }
 
             return pmx;
         }
@@ -461,6 +465,19 @@ namespace LibMMD.Pmx
                     RotationMaximum = reader.ReadStruct<Vec3f>(),
                     PositionSpring = reader.ReadStruct<Vec3f>(),
                     RotationSpring = reader.ReadStruct<Vec3f>()
+                });
+            }
+        }
+
+        private static void ParseSoftBodies(BinaryReader reader, PmxModel pmx)
+        {
+            var softBodyCount = reader.ReadInt32();
+            pmx.SoftBodies = new List<PmxSoftBody>();
+            for (var i = 0; i < softBodyCount; i++)
+            {
+                pmx.SoftBodies.Add(new PmxSoftBody()
+                {
+                    
                 });
             }
         }
