@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibMMD", "LibMMD\LibMMD.csproj", "{63709D0A-E4D4-4A8A-86CC-9DB25F32355A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibMMD.Tests", "LibMMD.Tests\LibMMD.Tests.csproj", "{22E21116-20D6-448B-9E61-45A5C30705CC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{63709D0A-E4D4-4A8A-86CC-9DB25F32355A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63709D0A-E4D4-4A8A-86CC-9DB25F32355A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63709D0A-E4D4-4A8A-86CC-9DB25F32355A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63709D0A-E4D4-4A8A-86CC-9DB25F32355A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22E21116-20D6-448B-9E61-45A5C30705CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22E21116-20D6-448B-9E61-45A5C30705CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22E21116-20D6-448B-9E61-45A5C30705CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22E21116-20D6-448B-9E61-45A5C30705CC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B28D51EB-AC62-4B68-AEA2-21096065CE46}
+	EndGlobalSection
+EndGlobal

@@ -328,3 +328,7 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+
+
+# remove this once we have a suitable model that we can commit to the repo
+LibMMD.Tests/assets/Model.pmx
