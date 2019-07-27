@@ -15,6 +15,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="assets\3thParty\sGUMIv101\sGUMI.pmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\3thParty\sGUMIv101\sGUMI_sBONE.pmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="assets\Model.pmx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

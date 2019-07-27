@@ -321,6 +321,7 @@ namespace LibMMD.Pmx
                             Data = Enumerable.Range(0, morphDataCount).Select(_ => new MaterialMorph()
                             {
                                 MaterialIndex = reader.ReadVarInt(pmx.Globals.MaterialIndexSize),
+                                Unkn = reader.ReadByte(),
                                 DiffuseColor = reader.ReadStruct<Vec4f>(),
                                 SpecularColor = reader.ReadStruct<Vec3f>(),
                                 Specularity = reader.ReadSingle(),

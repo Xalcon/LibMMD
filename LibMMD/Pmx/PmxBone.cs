@@ -66,11 +66,13 @@ namespace LibMMD.Pmx
         IsVisible = 1 << 3, // ???
         Enabled = 1 << 4, // ???
         InverseKinematics = 1 << 5, // Use inverse kinematics (physics)
-        InheritRotation = 1 << 6, // Rotation inherits from another bone
-        InheritTranslation = 1 << 7, // Translation inherits from another bone
-        FixedAxis = 1 << 8, // The bone's shaft is fixed in a direction
-        LocalCoordinate = 1 << 9, // ???
-        PhysicsAfterDeform = 1 << 10, // ???
-        ExternalParentDeform = 1 << 11, // ???
+        UnknownBit6 = 1 << 6,
+        UnknownBit7 = 1 << 7,
+        InheritRotation = 1 << 8, // Rotation inherits from another bone
+        InheritTranslation = 1 << 9, // Translation inherits from another bone
+        FixedAxis = 1 << 10, // The bone's shaft is fixed in a direction
+        LocalCoordinate = 1 << 11, // ???
+        PhysicsAfterDeform = 1 << 12, // ???
+        ExternalParentDeform = 1 << 13, // ???
     }
 }
