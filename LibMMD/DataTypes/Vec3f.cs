@@ -1,5 +1,8 @@
-﻿namespace LibMMD.DataTypes
+﻿using System.Runtime.InteropServices;
+
+namespace LibMMD.DataTypes
 {
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Vec3f
     {
         public float X;

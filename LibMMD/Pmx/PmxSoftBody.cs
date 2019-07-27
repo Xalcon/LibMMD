@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace LibMMD.Pmx
@@ -11,7 +12,42 @@ namespace LibMMD.Pmx
         public PmxSoftBodyShapeType ShapeType;
         public int MaterialIndex;
         public byte GroupId;
-        public ushort NoCollisionGroup;
+        public ushort NoCollisionMask;
+        
+        public PmxSoftBodyBullet3dData Bullet3DData;
+
+        public int AnchorRigidBodyCount;
+        public List<PmxSoftBodyAnchorRigidBody> AnchorRigidBodies;
+        public int VertexPintCount;
+        public List<PmxSoftBodyVertexPin> VertexPins;
+    }
+
+    public enum PmxSoftBodyShapeType : byte
+    {
+        TriMesh = 0,
+        Rope = 1
+    }
+
+    [Flags]
+    public enum PmxSoftBodyFlags : byte
+    {
+        BLink = 1 << 0,
+        ClusterCreation = 1 << 1,
+        LinkCrossing = 1 << 2
+    }
+
+    public enum PmxSoftbodyAerodynamicsModel : int
+    {
+        VPoint,
+        VTwoSided,
+        VOneSided,
+        FOneSided,
+        FTwoSided
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct PmxSoftBodyBullet3dData
+    {
         public PmxSoftBodyFlags Flags;
         public int BLinkCreateDistance;
         public int NumberOfClusters;
@@ -118,47 +154,19 @@ namespace LibMMD.Pmx
         /// Volume stiffness coefficient
         /// </summary>
         public int MaterialVST;
-
-        public int AnchorRigidBodyCount;
-        public List<PmxSoftBodyAnchorRigidBody> AnchorRigidBodies;
-        public int VertexPintCount;
-        public List<PmxSoftBodyVertexPin> VertexPins;
     }
-
-    public enum PmxSoftBodyShapeType : byte
-    {
-        TriMesh = 0,
-        Rope = 1
-    }
-
-    [Flags]
-    public enum PmxSoftBodyFlags : byte
-    {
-        BLink = 1 << 0,
-        ClusterCreation = 1 << 1,
-        LinkCrossing = 1 << 2
-    }
-
-    public enum PmxSoftbodyAerodynamicsModel : int
-    {
-        VPoint,
-        VTwoSided,
-        VOneSided,
-        FOneSided,
-        FTwoSided
-    }
-
+    
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class PmxSoftBodyAnchorRigidBody
     {
         public int RigidBodyIndex;
         public int VertexIndex;
         public byte NearMode;
     }
-
+    
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class PmxSoftBodyVertexPin
     {
         public int VertexIndex;
     }
-
-
 }

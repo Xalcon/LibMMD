@@ -11,7 +11,12 @@ namespace LibMMD.Tests
     [TestFixture]
     public class PmxParserTests
     {
-        public static IEnumerable<TestCaseData> PmxTestCases => new DirectoryInfo("assets").EnumerateFiles("*.pmx", SearchOption.AllDirectories).Select(f => new TestCaseData(f));
+        private static readonly DirectoryInfo BaseDir = new DirectoryInfo(@"assets");
+
+        public static IEnumerable<TestCaseData> PmxTestCases => BaseDir
+            .EnumerateFiles("*.pmx", SearchOption.AllDirectories)
+            .Select(f => new TestCaseData(f)
+                .SetName($"TestParsingModel: {f.FullName.Substring(BaseDir.FullName.Length + 1)}"));
 
         [TestCaseSource("PmxTestCases")]
         public void TestParsingModel(FileInfo modelFile)

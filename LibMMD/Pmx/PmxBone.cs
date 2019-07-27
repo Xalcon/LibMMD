@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 using LibMMD.DataTypes;
 
 namespace LibMMD.Pmx
 {
-    public struct PmxBone
+    public class PmxBone
     {
         public string NameLocal;
         public string NameUniversal;
@@ -33,7 +34,8 @@ namespace LibMMD.Pmx
         public int ParentIndex;
         public float ParentWeight;
     }
-
+    
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct BoneLocalCoordinates
     {
         public Vec3f VectorX;

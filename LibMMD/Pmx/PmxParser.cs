@@ -62,18 +62,20 @@ namespace LibMMD.Pmx
         {
             var vertexCount = reader.ReadInt32();
             pmx.Vertices = new List<PmxVertexData>();
+            int additionalVec4Count = pmx.Globals.AdditionalVec4Count;
+
             for (var i = 0; i < vertexCount; i++)
             {
                 var vertex = new PmxVertexData();
 
-                vertex.Position = new Vec3f(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                vertex.Normal = new Vec3f(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                vertex.UV = new Vec2f(reader.ReadSingle(), reader.ReadSingle());
+                vertex.Position = reader.ReadStruct<Vec3f>();
+                vertex.Normal = reader.ReadStruct<Vec3f>();
+                vertex.UV = reader.ReadStruct<Vec2f>();
                 vertex.AdditionalVec4 = new Vec4f[pmx.Globals.AdditionalVec4Count];
-
-                for (var j = 0; j < pmx.Globals.AdditionalVec4Count; j++)
+    
+                for (var j = 0; j < additionalVec4Count; j++)
                 {
-                    vertex.AdditionalVec4[j] = new Vec4f(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    vertex.AdditionalVec4[j] = reader.ReadStruct<Vec4f>();
                 }
 
                 vertex.DeformType = reader.ReadEnum<BoneWeightDeformType>();
@@ -157,6 +159,7 @@ namespace LibMMD.Pmx
                     : reader.ReadVarInt(pmx.Globals.TextureIndexSize);
                 material.MetaData = MMDText.Read(reader, pmx.Globals.TextEncoding);
                 material.IndexCount = reader.ReadInt32();
+                pmx.Materials.Add(material);
             }
         }
 
@@ -193,34 +196,34 @@ namespace LibMMD.Pmx
                     bone.LocalCoordinates = reader.ReadStruct<BoneLocalCoordinates>();
 
                 if (bone.Flags.HasFlag(BoneFlags.ExternalParentDeform))
-                    bone.ExternalParent = reader.ReadVarInt(pmx.Globals.BoneIndexSize);
+                    //bone.ExternalParent = reader.ReadVarInt(pmx.Globals.BoneIndexSize);
+                    bone.ExternalParent = reader.ReadInt32();
 
                 if(bone.Flags.HasFlag(BoneFlags.InverseKinematics))
                 {
                     int linkCount;
-                    bone.InverseKinematic = new BoneInverseKinematic()
+                    var boneIk = new BoneInverseKinematic();
+                    boneIk.TargetIndex = reader.ReadVarInt(pmx.Globals.BoneIndexSize);
+                    boneIk.LoopCount = reader.ReadInt32();
+                    boneIk.LimitRadian = reader.ReadSingle();
+                    boneIk.LinkCount = (linkCount = reader.ReadInt32());
+                    boneIk.BoneLinks = Enumerable.Range(0, linkCount).Select(_ =>
                     {
-                        TargetIndex = reader.ReadVarInt(pmx.Globals.BoneIndexSize),
-                        LoopCount = reader.ReadInt32(),
-                        LimitRadian = reader.ReadSingle(),
-                        LinkCount = (linkCount = reader.ReadInt32()),
-                        BoneLinks = Enumerable.Range(0, linkCount).Select(_ =>
+                        var ikLink = new BoneLink
                         {
-                            var ikLink = new BoneLink
-                            {
-                                BoneIndex = reader.ReadVarInt(pmx.Globals.BoneIndexSize),
-                                HasLimits = reader.ReadBoolean()
-                            };
+                            BoneIndex = reader.ReadVarInt(pmx.Globals.BoneIndexSize),
+                            HasLimits = reader.ReadBoolean()
+                        };
 
-                            if (ikLink.HasLimits)
-                            {
-                                ikLink.LimitMinimum = reader.ReadStruct<Vec3f>();
-                                ikLink.LimitMaximum = reader.ReadStruct<Vec3f>();
-                            }
+                        if (ikLink.HasLimits)
+                        {
+                            ikLink.LimitMinimum = reader.ReadStruct<Vec3f>();
+                            ikLink.LimitMaximum = reader.ReadStruct<Vec3f>();
+                        }
 
-                            return ikLink;
-                        }).ToList()
-                    };
+                        return ikLink;
+                    }).ToList();
+                    bone.InverseKinematic = boneIk;
                 }
                 pmx.Bones.Add(bone);
             }
@@ -476,9 +479,28 @@ namespace LibMMD.Pmx
             pmx.SoftBodies = new List<PmxSoftBody>();
             for (var i = 0; i < softBodyCount; i++)
             {
+                int anchorRigidBodyCount, vertexPinCount;
+
                 pmx.SoftBodies.Add(new PmxSoftBody()
                 {
-                    
+                    NameLocal = MMDText.Read(reader, pmx.Globals.TextEncoding),
+                    NameUniversal = MMDText.Read(reader, pmx.Globals.TextEncoding),
+                    ShapeType = reader.ReadEnum<PmxSoftBodyShapeType>(),
+                    GroupId = reader.ReadByte(),
+                    NoCollisionMask = reader.ReadUInt16(),
+                    Bullet3DData = reader.ReadStruct<PmxSoftBodyBullet3dData>(),
+                    AnchorRigidBodyCount = anchorRigidBodyCount = reader.ReadInt32(),
+                    AnchorRigidBodies = Enumerable.Range(0, anchorRigidBodyCount).Select(_ => new PmxSoftBodyAnchorRigidBody()
+                    {
+                        RigidBodyIndex = reader.ReadVarInt(pmx.Globals.RigidBodyIndexSize),
+                        VertexIndex = reader.ReadVarInt(pmx.Globals.VertexIndexSize, true),
+                        NearMode = reader.ReadByte()
+                    }).ToList(),
+                    VertexPintCount = vertexPinCount = reader.ReadInt32(),
+                    VertexPins = Enumerable.Range(0, anchorRigidBodyCount).Select(_ => new PmxSoftBodyVertexPin()
+                    {
+                        VertexIndex = reader.ReadVarInt(pmx.Globals.VertexIndexSize, true),
+                    }).ToList()
                 });
             }
         }
