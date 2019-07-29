@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using System.Text;
 using LibMMD.Exceptions;
 
+[assembly: InternalsVisibleTo("LibMMD.Tests")]
 namespace LibMMD
 {
-    static class Extensions
+    internal static class Extensions
     {
         public static T[] Extend<T>(this T[] array, int size)
         {
@@ -68,6 +67,26 @@ namespace LibMMD
                 default:
                     throw new LibMMDParserException($"size of {size} not supported for variable indices");
             }
+        }
+
+        /// <summary>
+        /// Reads a length prefixed string (4 bytes) from the binary reader
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="encoding"></param>
+        /// <returns></returns>
+        public static string ReadLPString(this BinaryReader reader, Encoding encoding)
+        {
+            if (reader.BaseStream.Length - reader.BaseStream.Position < 4)
+                throw new LibMMDTextDecodingException("Unable to decode text from undersized buffer");
+
+            var len = reader.ReadInt32();
+            var remainingBytes = (reader.BaseStream.Length - reader.BaseStream.Position);
+            if (len < 0 || len > remainingBytes)
+                throw new LibMMDTextDecodingException($"Text to big for array buffer (Len: {len}, Remaining Bytes: {remainingBytes})");
+
+            var stringBytes = reader.ReadBytes(len);
+            return len > 0 ? encoding.GetString(stringBytes) : "";
         }
     }
 }

@@ -11,12 +11,13 @@ namespace LibMMD.Tests
     [TestFixture]
     public class PmxParserTests
     {
-        private static readonly DirectoryInfo BaseDir = new DirectoryInfo(@"assets");
+        private static readonly DirectoryInfo BaseDir = new DirectoryInfo($@"{TestContext.CurrentContext.WorkDirectory}\assets");
 
-        public static IEnumerable<TestCaseData> PmxTestCases => BaseDir
+        public static IEnumerable<TestCaseData> PmxTestCases => BaseDir.Exists ? BaseDir
             .EnumerateFiles("*.pmx", SearchOption.AllDirectories)
             .Select(f => new TestCaseData(f)
-                .SetName($"TestParsingModel: {f.FullName.Substring(BaseDir.FullName.Length + 1)}"));
+                .SetName($"TestParsingModel: {f.FullName.Substring(BaseDir.FullName.Length + 1)}"))
+            : throw new FileNotFoundException($"directory '{BaseDir.FullName}' not found");
 
         [TestCaseSource(nameof(PmxTestCases))]
         public void TestParsingModel(FileInfo modelFile)

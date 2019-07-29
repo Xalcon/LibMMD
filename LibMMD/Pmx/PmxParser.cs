@@ -52,10 +52,10 @@ namespace LibMMD.Pmx
             pmx.Globals = new PmxGlobalData(reader.ReadBytes(globalsCount).Extend(8));
 
             var encoding = pmx.Globals.TextEncoding;
-            pmx.ModelNameLocal = MMDText.Read(reader, encoding);
-            pmx.ModelNameUniversal = MMDText.Read(reader, encoding);
-            pmx.ModelCommentsLocal = MMDText.Read(reader, encoding);
-            pmx.ModelCommentsUniversal = MMDText.Read(reader, encoding);
+            pmx.ModelNameLocal = reader.ReadLPString(encoding);
+            pmx.ModelNameUniversal = reader.ReadLPString(encoding);
+            pmx.ModelCommentsLocal = reader.ReadLPString(encoding);
+            pmx.ModelCommentsUniversal = reader.ReadLPString(encoding);
         }
 
         private static void ParseVertexData(BinaryReader reader, PmxModel pmx)
@@ -130,7 +130,7 @@ namespace LibMMD.Pmx
         {
             var textureCount = reader.ReadInt32();
             var encoding = pmx.Globals.TextEncoding;
-            pmx.Textures = Enumerable.Range(0, textureCount).Select(i => MMDText.Read(reader, encoding)).ToList();
+            pmx.Textures = Enumerable.Range(0, textureCount).Select(i => reader.ReadLPString(encoding)).ToList();
         }
 
         private static void ParseMaterials(BinaryReader reader, PmxModel pmx)
@@ -141,8 +141,8 @@ namespace LibMMD.Pmx
             for (var i = 0; i < materialsCount; i++)
             {
                 var material = new PmxMaterial();
-                material.NameLocal = MMDText.Read(reader, encoding);
-                material.NameUniversal = MMDText.Read(reader, encoding);
+                material.NameLocal = reader.ReadLPString(encoding);
+                material.NameUniversal = reader.ReadLPString(encoding);
                 material.DiffuseColor = reader.ReadStruct<Vec4f>();
                 material.SpecularColor = reader.ReadStruct<Vec3f>();
                 material.SpecularStrength = reader.ReadSingle();
@@ -157,7 +157,7 @@ namespace LibMMD.Pmx
                 material.ToonValue = material.ToonReference == ToonReference.Internal
                     ? reader.ReadByte()
                     : reader.ReadVarInt(pmx.Globals.TextureIndexSize);
-                material.MetaData = MMDText.Read(reader, pmx.Globals.TextEncoding);
+                material.MetaData = reader.ReadLPString(pmx.Globals.TextEncoding);
                 material.IndexCount = reader.ReadInt32();
                 pmx.Materials.Add(material);
             }
@@ -170,8 +170,8 @@ namespace LibMMD.Pmx
             for (var i = 0; i < boneCount; i++)
             {
                 var bone = new PmxBone();
-                bone.NameLocal = MMDText.Read(reader, pmx.Globals.TextEncoding);
-                bone.NameUniversal = MMDText.Read(reader, pmx.Globals.TextEncoding);
+                bone.NameLocal = reader.ReadLPString(pmx.Globals.TextEncoding);
+                bone.NameUniversal = reader.ReadLPString(pmx.Globals.TextEncoding);
                 bone.Position = reader.ReadStruct<Vec3f>();
                 bone.ParentBoneIndex = reader.ReadVarInt(pmx.Globals.BoneIndexSize);
                 bone.Layer = reader.ReadInt32();
@@ -235,8 +235,8 @@ namespace LibMMD.Pmx
             pmx.Morphs = new List<PmxMorph>();
             for (var i = 0; i < morphCount; i++)
             {
-                var morphNameLocal = MMDText.Read(reader, pmx.Globals.TextEncoding);
-                var morphNameUniversal = MMDText.Read(reader, pmx.Globals.TextEncoding);
+                var morphNameLocal = reader.ReadLPString(pmx.Globals.TextEncoding);
+                var morphNameUniversal = reader.ReadLPString(pmx.Globals.TextEncoding);
                 var panelType = reader.ReadByte();
                 var morphType = reader.ReadEnum<PmxMorphType>();
                 var morphDataCount = reader.ReadInt32();
@@ -386,8 +386,8 @@ namespace LibMMD.Pmx
                 var frameCount = 0;
                 var displayData = new PmxDisplayData()
                 {
-                    NameLocal = MMDText.Read(reader, pmx.Globals.TextEncoding),
-                    NameUniversal = MMDText.Read(reader, pmx.Globals.TextEncoding),
+                    NameLocal = reader.ReadLPString(pmx.Globals.TextEncoding),
+                    NameUniversal = reader.ReadLPString(pmx.Globals.TextEncoding),
                     IsSpecial = reader.ReadBoolean(),
                     FrameCount = frameCount = reader.ReadInt32(),
                     Frames = Enumerable.Range(0, frameCount).Select<int, FrameData>(_ =>
@@ -429,8 +429,8 @@ namespace LibMMD.Pmx
             {
                 pmx.RigidBodies.Add(new PmxRigidBody()
                 {
-                    NameLocal = MMDText.Read(reader, pmx.Globals.TextEncoding),
-                    NameUniversal = MMDText.Read(reader, pmx.Globals.TextEncoding),
+                    NameLocal = reader.ReadLPString(pmx.Globals.TextEncoding),
+                    NameUniversal = reader.ReadLPString(pmx.Globals.TextEncoding),
                     RelatedBoneIndex = reader.ReadVarInt(pmx.Globals.BoneIndexSize),
                     GroupId = reader.ReadByte(),
                     NonCollisionMask = reader.ReadUInt16(),
@@ -456,8 +456,8 @@ namespace LibMMD.Pmx
             {
                 pmx.Joints.Add(new PmxJoint()
                 {
-                    NameLocal = MMDText.Read(reader, pmx.Globals.TextEncoding),
-                    NameUniversal = MMDText.Read(reader, pmx.Globals.TextEncoding),
+                    NameLocal = reader.ReadLPString(pmx.Globals.TextEncoding),
+                    NameUniversal = reader.ReadLPString(pmx.Globals.TextEncoding),
                     JointType = reader.ReadEnum<PmxJointType>(),
                     RigidBodyIndexA = reader.ReadVarInt(pmx.Globals.RigidBodyIndexSize),
                     RigidBodyIndexB = reader.ReadVarInt(pmx.Globals.RigidBodyIndexSize),
@@ -483,8 +483,8 @@ namespace LibMMD.Pmx
 
                 pmx.SoftBodies.Add(new PmxSoftBody()
                 {
-                    NameLocal = MMDText.Read(reader, pmx.Globals.TextEncoding),
-                    NameUniversal = MMDText.Read(reader, pmx.Globals.TextEncoding),
+                    NameLocal = reader.ReadLPString(pmx.Globals.TextEncoding),
+                    NameUniversal = reader.ReadLPString(pmx.Globals.TextEncoding),
                     ShapeType = reader.ReadEnum<PmxSoftBodyShapeType>(),
                     GroupId = reader.ReadByte(),
                     NoCollisionMask = reader.ReadUInt16(),

@@ -8,7 +8,7 @@ using System.Text;
 namespace LibMMD.Tests
 {
     [TestFixture]
-    public class MMDTextTests
+    public class BinaryReaderLengthPrefixedStringTests
     {
         public static IEnumerable<TestCaseData> ValidTestCases
         {
@@ -48,15 +48,15 @@ namespace LibMMD.Tests
         {
             using(var stream = new MemoryStream(buffer))
             using(var reader = new BinaryReader(stream))
-                return MMDText.Read(reader, encoding);
+                return reader.ReadLPString(encoding);
         }
 
         [TestCaseSource(nameof(InvalidTestCases))]
-        public void DecodeErrornousString(byte[] buffer, Encoding encoding)
+        public void DecodeErroneousString(byte[] buffer, Encoding encoding)
         {
             using (var stream = new MemoryStream(buffer))
             using (var reader = new BinaryReader(stream))
-                Assert.That(new TestDelegate(() => MMDText.Read(reader, encoding)), Throws.TypeOf<LibMMDTextDecodingException>());
+                Assert.That(new TestDelegate(() => reader.ReadLPString(encoding)), Throws.TypeOf<LibMMDTextDecodingException>());
         }
     }
 }
