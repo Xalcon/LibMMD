@@ -18,7 +18,7 @@ namespace LibMMD.Tests
             .Select(f => new TestCaseData(f)
                 .SetName($"TestParsingModel: {f.FullName.Substring(BaseDir.FullName.Length + 1)}"));
 
-        [TestCaseSource("PmxTestCases")]
+        [TestCaseSource(nameof(PmxTestCases))]
         public void TestParsingModel(FileInfo modelFile)
         {
             PmxModel model;
