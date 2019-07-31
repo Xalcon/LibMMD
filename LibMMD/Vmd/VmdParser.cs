@@ -9,6 +9,11 @@ namespace LibMMD.Vmd
 {
     public class VmdParser
     {
+        static VmdParser()
+        {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        }
+
         public static Vmd Parse(Stream stream)
         {
             using (var reader = new BinaryReader(stream, Encoding.Default, true))
@@ -17,13 +22,15 @@ namespace LibMMD.Vmd
 
         public static Vmd Parse(BinaryReader reader)
         {
+            var encoding = Encoding.GetEncoding("shift-jis");
+
             var vmd = new Vmd();
-            vmd.Magic = reader.ReadFSString(30, Encoding.ASCII);
+            vmd.Magic = reader.ReadFSString(30, encoding);
 
             if (vmd.Magic.StartsWith("Vocaloid Motion Data file"))
-                vmd.ModelName = reader.ReadFSString(10, Encoding.Unicode);
+                vmd.ModelName = reader.ReadFSString(10, encoding);
             else if (vmd.Magic.StartsWith("Vocaloid Motion Data 0002"))
-                vmd.ModelName = reader.ReadFSString(20, Encoding.Unicode);
+                vmd.ModelName = reader.ReadFSString(20, encoding);
             else
                 throw new LibMMDParserException(
                     $"Unknown magic header: {vmd.Magic}, unable to determine model name length");

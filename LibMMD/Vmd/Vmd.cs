@@ -25,6 +25,7 @@ namespace LibMMD.Vmd
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public unsafe struct VmdBoneKeyFrame
     {
+        private static readonly Encoding ShiftJis = Encoding.GetEncoding("shift-jis");
         private const int NAME_BYTES = 15;
 
         private fixed byte NameBytes[NAME_BYTES];
@@ -38,7 +39,7 @@ namespace LibMMD.Vmd
             get
             {
                 fixed (byte* p = this.NameBytes)
-                    return Encoding.Unicode.GetString(p, NAME_BYTES).TrimEnd('\0');
+                    return ShiftJis.GetString(p, NAME_BYTES).Split('\0')[0];
             }
         }
     }
@@ -46,7 +47,9 @@ namespace LibMMD.Vmd
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public unsafe struct VmdMorphKeyFrame
     {
+        private static readonly Encoding ShiftJis = Encoding.GetEncoding("shift-jis");
         private const int NAME_BYTES = 15;
+
         private fixed byte NameBytes[NAME_BYTES];
         public int FrameIndex;
         public float Weight;
@@ -56,7 +59,7 @@ namespace LibMMD.Vmd
             get
             {
                 fixed (byte* p = this.NameBytes)
-                    return Encoding.Unicode.GetString(p, NAME_BYTES).TrimEnd('\0');
+                    return ShiftJis.GetString(p, NAME_BYTES).Split('\0')[0];
             }
         }
     }
@@ -99,7 +102,9 @@ namespace LibMMD.Vmd
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public unsafe struct VmdInverseKinematicInfo
     {
+        private static readonly Encoding ShiftJis = Encoding.GetEncoding("shift-jis");
         private const int NAME_BYTES = 20;
+
         private fixed byte NameBytes[NAME_BYTES];
         public byte Enabled;
 
@@ -108,7 +113,7 @@ namespace LibMMD.Vmd
             get
             {
                 fixed (byte* p = this.NameBytes)
-                    return Encoding.Unicode.GetString(p, NAME_BYTES).TrimEnd('\0');
+                    return ShiftJis.GetString(p, NAME_BYTES).Split('\0')[0];
             }
         }
     }
