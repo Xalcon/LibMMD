@@ -29,6 +29,7 @@ namespace LibMMD.Tests
             using (var stream = Open(modelFile))
             {
                 motion = VmdParser.Parse(stream);
+                TestContext.Out.WriteLine("Model Name: {0}", motion.ModelName);
                 TestContext.Out.WriteLine("Bone Key Frames: {0}", motion.BoneKeyFrames.Length);
                 TestContext.Out.WriteLine("Morph Key Frames: {0}", motion.MorphKeyFrames.Length);
                 TestContext.Out.WriteLine("Camera Key Frames: {0}", motion.CameraKeyFrames.Length);

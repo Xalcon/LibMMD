@@ -104,7 +104,7 @@ namespace LibMMD
                 throw new LibMMDTextDecodingException("Unable to decode text from undersized buffer");
 
             var stringBytes = reader.ReadBytes(maxLen);
-            return encoding.GetString(stringBytes).TrimEnd('\0');
+            return encoding.GetString(stringBytes).Split('\0')[0];
         }
 
         public static bool IsEndOfStream(this BinaryReader reader)
