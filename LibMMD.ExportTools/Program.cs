@@ -35,9 +35,11 @@ namespace LibMMD.ExportTools
 
             using (var stream = file.OpenRead())
             using (var outputStream = File.OpenWrite(file.FullName + ".obj"))
+            using (var mtlOutputStream = File.OpenWrite(file.FullName + ".mtl"))
             {
                 var model = PmxParser.Parse(stream);
-                PmxToWavefrontExporter.ExportModel(model, outputStream);
+                PmxToWavefrontExporter.ExportModel(model, outputStream, file.FullName + ".mtl");
+                PmxToWavefrontExporter.ExportMaterial(model, mtlOutputStream);
             }
         }
     }
