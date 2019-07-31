@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using LibMMD.DataTypes;
 using LibMMD.Exceptions;
 
@@ -14,7 +15,7 @@ namespace LibMMD.Pmx
 
         public static PmxModel Parse(Stream stream)
         {
-            using (var reader = new BinaryReader(stream))
+            using (var reader = new BinaryReader(stream, Encoding.Default, true))
             {
                 return Parse(reader);
             }

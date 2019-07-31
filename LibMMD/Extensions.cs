@@ -25,13 +25,15 @@ namespace LibMMD
 
         public static unsafe T[] ReadArray<T>(this BinaryReader reader, int elementCount) where T : unmanaged
         {
+            if(elementCount <= 0) return new T[0];
+
             var array = new T[elementCount];
             var buffer = reader.ReadBytes(sizeof(T) * elementCount);
             fixed (byte* src = buffer)
             {
                 fixed (T* dst = array)
                 {
-                    Buffer.MemoryCopy(src, dst, array.Length, array.Length);
+                    Buffer.MemoryCopy(src, dst, buffer.Length, buffer.Length);
                 }
             }
 
@@ -87,6 +89,27 @@ namespace LibMMD
 
             var stringBytes = reader.ReadBytes(len);
             return len > 0 ? encoding.GetString(stringBytes) : "";
+        }
+
+        /// <summary>
+        /// Reads a string with a fixed size length
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="maxLen"></param>
+        /// <param name="encoding"></param>
+        /// <returns></returns>
+        public static string ReadFSString(this BinaryReader reader, int maxLen, Encoding encoding)
+        {
+            if (reader.BaseStream.Length - reader.BaseStream.Position < maxLen)
+                throw new LibMMDTextDecodingException("Unable to decode text from undersized buffer");
+
+            var stringBytes = reader.ReadBytes(maxLen);
+            return encoding.GetString(stringBytes).TrimEnd('\0');
+        }
+
+        public static bool IsEndOfStream(this BinaryReader reader)
+        {
+            return reader.BaseStream.Position >= reader.BaseStream.Length;
         }
     }
 }

@@ -13,13 +13,13 @@ namespace LibMMD.Tests
     {
         private static readonly DirectoryInfo BaseDir = new DirectoryInfo($@"{TestContext.CurrentContext.WorkDirectory}\assets");
 
-        public static IEnumerable<TestCaseData> PmxTestCases => BaseDir.Exists ? BaseDir
+        public static IEnumerable<TestCaseData> TestCases => BaseDir.Exists ? BaseDir
             .EnumerateFiles("*.pmx", SearchOption.AllDirectories)
             .Select(f => new TestCaseData(f)
                 .SetName($"TestParsingModel: {f.FullName.Substring(BaseDir.FullName.Length + 1)}"))
             : throw new FileNotFoundException($"directory '{BaseDir.FullName}' not found");
 
-        [TestCaseSource(nameof(PmxTestCases))]
+        [TestCaseSource(nameof(TestCases))]
         public void TestParsingModel(FileInfo modelFile)
         {
             PmxModel model;
